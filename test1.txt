@@ -1,0 +1,15 @@
+FUNC int soma(int a, int b) {
+    RETURN a + b
+}
+
+FUNC VOID imprimir_mensagem() {
+    PRINTLN("Olá, mundo!")
+}
+
+int main() {
+    int x = 10;
+    int y = 20;
+    int z = soma(x, y);
+    imprimir_mensagem();
+    RETURN 0
+}
