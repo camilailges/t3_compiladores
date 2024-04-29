@@ -23,18 +23,16 @@ IF { return Parser.IF;}
 ELSE { return Parser.ELSE;}
 ENDIF { return Parser.endif;}
 IDENT { return Parser.ident;}
-WHILE { return Parser.while;}
-INT { return Parser.int;}
-DOUBLE { return Parser.double;}
-BOOLEAN { return Parser.boolean;}
-FUNC { return Parser.func;}
-VOID { return Parser.void;}
-RETURN { return Parser.return;}
+WHILE { return Parser.WHILE;}
+INT { return Parser.INT;}
+DOUBLE { return Parser.DOUBLE;}
+BOOLEAN { return Parser.BOOLEAN;}
+FUNC { return Parser.FUNC;}
+VOID { return Parser.VOID;}
+RETURN { return Parser.RETURN;}
 
 [0-9]+ { return Parser.num;}
 [a-zA-Z][a-zA-Z0-9]* { return Parser.ident;}
-
-%token IDENT, NUM, WHILE, IF, ELSE, INT, DOUBLE, BOOLEAN, FUNC, VOID, RETURN
 
 
 "<" |

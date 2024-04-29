@@ -157,14 +157,21 @@ final ParserVal dup_yyval(ParserVal val)
 }
 //#### end semantic value section ####
 public final static short IF=257;
+public final static short ELSE=261;
+public final static short endif=263;
+public final static short ident=265;
+public final static short WHILE=266;
+public final static short INT=267;
+public final static short DOUBLE=268;
+public final static short BOOLEAN=269;
+public final static short FUNC=270;
+public final static short VOID=271;
+public final static short RETURN=272;
 public final static short DO=258;
 public final static short TO=259;
 public final static short THEN=260;
-public final static short ELSE=261;
 public final static short BY=262;
-public final static short endif=263;
 public final static short num=264;
-public final static short ident=265;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
     0,    1,    2,    2,    3,    3,    3,    4,    4,    4,
