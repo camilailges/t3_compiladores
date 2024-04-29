@@ -19,17 +19,33 @@ NL  = \n | \r | \r\n
 "$TRACE_ON"  { yyparser.setDebug(true);  }
 "$TRACE_OFF" { yyparser.setDebug(false); }
 
-if { return Parser.IF;}
-do { return Parser.DO; }
-to { return Parser.TO; }
-then { return Parser.THEN;}
-else { return Parser.ELSE;}
-by { return Parser.BY;} 
-endif { return Parser.endif;}
+IF { return Parser.IF;}
+ELSE { return Parser.ELSE;}
+ENDIF { return Parser.endif;}
+IDENT { return Parser.ident;}
+WHILE { return Parser.while;}
+INT { return Parser.int;}
+DOUBLE { return Parser.double;}
+BOOLEAN { return Parser.boolean;}
+FUNC { return Parser.func;}
+VOID { return Parser.void;}
+RETURN { return Parser.return;}
 
 [0-9]+ { return Parser.num;}
 [a-zA-Z][a-zA-Z0-9]* { return Parser.ident;}
 
+%token IDENT, NUM, WHILE, IF, ELSE, INT, DOUBLE, BOOLEAN, FUNC, VOID, RETURN
+
+
+"<" |
+">" |
+">="| 
+"=>"| 
+"!="|
+"=="|
+"!" |
+"&&"|
+"||"|
 "{" |
 "}" |
 "=" |

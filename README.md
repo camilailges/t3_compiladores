@@ -2,7 +2,7 @@
 
 1. gerar o léxico  (gera Yylex.java):
 
-> java -jar JFlex.jar asdr_lex.flex
+> java -jar JFlex.jar lexico.flex
 
 2. chmod +x byaccj.macOs
 
@@ -10,7 +10,7 @@
 
 4. gerar o sintático  (gera Parser.java):
 
-> byaccj -tv -J asdr.y
+> byaccj.macos -tv -J exerc.y
 
 3. para compilar código java:
 
@@ -18,4 +18,4 @@
 
 4. para testar:
 
-> java Parser <teste.txt>
+> java Parser prog1.txt

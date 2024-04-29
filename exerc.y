@@ -3,96 +3,131 @@
 %}
    
 
-%token IF, DO, TO, THEN, ELSE, BY, endif, num, ident
+%token IDENT, NUM, WHILE, IF, ELSE, INT, DOUBLE, BOOLEAN, FUNC, VOID, RETURN
 
 %left '+' '-'
 %left '*' '/'
+%nonassoc '<' '>' '>=' '=>' '!=' '=='
+%left '!' '&&' '||'
 
 %%
- 
-Prog :  Bloco
+
+Prog : ListaDecl
     ;
 
-Bloco : '{' LCmd '}'
+ListaDecl :  DeclVar  ListaDecl
+          |  DeclFun  ListaDecl
+          |  // vazio
+          ;
+
+
+DeclVar : Tipo ListaIdent ';'
+        | // vazio
+        ;
+
+
+Tipo : INT
+    | DOUBLE
+    | BOOLEAN
+    ;
+
+ListaIdent : IDENT RestoListaIdent
+           ;
+
+
+RestoListaIdent : ',' ListaIdent
+                | // vazio
+                ;
+
+
+DeclFun : FUNC Tipo IDENT '(' FormalPar ')' '{' DeclVar ListaCmd Retorno '}'
+        | FUNC VOID IDENT '(' FormalPar ')' '{' DeclVar ListaCmd '}'
+        | // vazio
+        ;
+
+
+Retorno : RETURN F ';'
+        ;
+
+ChamadaFunc : IDENT '(' ParamChamada ')' ';'
+
+
+ParamChamada : L ',' ParamChamada
+             | L
+             | // vazio
+             ;
+
+
+FormalPar : ParamList
+          | // vazio
+          ;
+
+
+ParamList : Tipo IDENT RestoParamList
+          ;
+
+
+RestoParamList : ',' ParamList
+               | // vazio
+               ;
+
+
+
+Bloco : '{' ListaCmd '}' ';'
       ;
 
-LCmd : LCmd  C
-     |       // vazio
-     ;
 
-C : ident '=' E ';'
-  | IF '(' E ')' THEN C endif
-  | IF '(' E ')' THEN C ELSE C endif  
+
+ListaCmd : Cmd ListaCmd
+         | // vazio
+         ;
+
+
+Cmd : Bloco
+    | WHILE '(' E ')' Cmd
+    | IDENT '=' E ';'
+    | IF '(' E ')' Cmd RestoIf
+    ;
+
+
+
+RestoIf : ELSE Cmd
+       | // vazio
+       ;
+
+
+E : E '+' T
+    | E '-' T
+    | T
+    ;
+
+T : T '*' L
+  | T '/' L
+  | L
   ;
 
+L : L '>' R
+  | L '<' R
+  | L '<=' R
+  | L '>=' R
+  | L '!=' R
+  | L '==' R
+  | R
+  ;
 
-E : E '+' E
-  | E '-' E
-  | E '*' E 
-  | E '/' E
-  | num
-  | ident
-;
+R : R '||' F
+  | R '&&' F
+  | '!'R
+  | F
+  ;
 
+F : IDENT
+  | NUM
+  | '(' E ')'
+  | ChamadaFunc
+  ;
 
-%%
-
-  private Yylex lexer;
-
-
-  private int yylex () {
-    int yyl_return = -1;
-    try {
-      yylval = new ParserVal(0);
-      yyl_return = lexer.yylex();
-    }
-    catch (IOException e) {
-      System.err.println("IO error :"+e.getMessage());
-    }
-    return yyl_return;
-  }
-
-
-  public void yyerror (String error) {
-    System.err.println ("Error: " + error);
-  }
-
-
-  public Parser(Reader r) {
-    lexer = new Yylex(r, this);
-  }
-
-
-  static boolean interactive;
-
-  public void setDebug(boolean debug) {
-    yydebug = debug;
-  }
-
-
-  public static void main(String args[]) throws IOException {
-    System.out.println("");
-
-    Parser yyparser;
-    if ( args.length > 0 ) {
-      // parse a file
-      yyparser = new Parser(new FileReader(args[0]));
-    }
-    else {System.out.print("> ");
-      interactive = true;
-	    yyparser = new Parser(new InputStreamReader(System.in));
-    }
-
-    yyparser.yyparse();
-    
-  //  if (interactive) {
-      System.out.println();
-      System.out.println("done!");
-  //  }
-  }
-
-
-
-
-
-
+//T : T * F
+//  | T / F
+//  | F
+//  ;
