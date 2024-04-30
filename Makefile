@@ -2,7 +2,7 @@
 # byacc/j from http://troi.lincom-asg.com/~rjamison/byacc/
 
 JFLEX  = java -jar jflex.jar
-BYACCJ = ./yacc.linux -tv -J
+BYACCJ = ./byaccj.macos -tv -J
 JAVAC  = javac
 
 # targets:

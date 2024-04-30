@@ -21,7 +21,6 @@ NL  = \n | \r | \r\n
 
 IF { return Parser.IF;}
 ELSE { return Parser.ELSE;}
-ENDIF { return Parser.endif;}
 IDENT { return Parser.ident;}
 WHILE { return Parser.WHILE;}
 INT { return Parser.INT;}
