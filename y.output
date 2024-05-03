@@ -1,0 +1,1411 @@
+   0  $accept : Prog $end
+
+   1  Prog : ListaDecl
+
+   2  ListaDecl : ListaDecl DeclVar
+   3            | ListaDecl DeclFun
+   4            |
+
+   5  DeclVar : Tipo ListaIdent ';'
+   6          |
+
+   7  Tipo : INT
+   8       | DOUBLE
+   9       | BOOLEAN
+
+  10  ListaIdent : IDENT
+  11             | ListaIdent ',' IDENT
+
+  12  DeclFun : FUNC Tipo IDENT '(' FormalPar ')' Bloco
+  13          | FUNC VOID IDENT '(' FormalPar ')' Bloco
+  14          |
+
+  15  ChamadaFunc : IDENT '(' ParamChamada ')'
+
+  16  ParamChamada : E
+  17               | ParamChamada ',' E
+  18               |
+
+  19  FormalPar : ParamList
+  20            |
+
+  21  ParamList : ParamList ',' Tipo IDENT
+  22            | Tipo IDENT
+
+  23  Bloco : '{' ListaCmd '}'
+
+  24  ListaCmd : ListaCmd Cmd
+  25           |
+
+  26  Cmd : Bloco
+  27      | WHILE '(' E ')' Cmd
+  28      | IF '(' E ')' Cmd RestoIf
+  29      | IDENT '=' E ';'
+
+  30  RestoIf : ELSE Cmd
+  31          |
+
+  32  E : E OR E
+  33    | E AND E
+  34    | E EQ E
+  35    | E NE E
+  36    | E '>' E
+  37    | E '<' E
+  38    | E GE E
+  39    | E LE E
+  40    | E '+' E
+  41    | E '-' E
+  42    | E '*' E
+  43    | E '/' E
+  44    | '(' E ')'
+  45    | '!' E
+  46    | F
+
+  47  F : IDENT
+  48    | NUM
+  49    | ChamadaFunc
+
+state 0
+	$accept : . Prog $end  (0)
+	ListaDecl : .  (4)
+
+	.  reduce 4
+
+	Prog  goto 1
+	ListaDecl  goto 2
+
+
+state 1
+	$accept : Prog . $end  (0)
+
+	$end  accept
+
+
+2: reduce/reduce conflict (reduce 1, reduce 6) on $end
+2: reduce/reduce conflict (reduce 1, reduce 14) on $end
+2: shift/reduce conflict (shift 3, reduce 6) on INT
+2: shift/reduce conflict (shift 3, reduce 14) on INT
+2: shift/reduce conflict (shift 4, reduce 6) on DOUBLE
+2: shift/reduce conflict (shift 4, reduce 14) on DOUBLE
+2: shift/reduce conflict (shift 5, reduce 6) on BOOLEAN
+2: shift/reduce conflict (shift 5, reduce 14) on BOOLEAN
+2: shift/reduce conflict (shift 6, reduce 6) on FUNC
+2: shift/reduce conflict (shift 6, reduce 14) on FUNC
+state 2
+	Prog : ListaDecl .  (1)
+	ListaDecl : ListaDecl . DeclVar  (2)
+	ListaDecl : ListaDecl . DeclFun  (3)
+	DeclVar : .  (6)
+	DeclFun : .  (14)
+
+	INT  shift 3
+	DOUBLE  shift 4
+	BOOLEAN  shift 5
+	FUNC  shift 6
+	$end  reduce 1
+
+	DeclVar  goto 7
+	DeclFun  goto 8
+	Tipo  goto 9
+
+
+state 3
+	Tipo : INT .  (7)
+
+	.  reduce 7
+
+
+state 4
+	Tipo : DOUBLE .  (8)
+
+	.  reduce 8
+
+
+state 5
+	Tipo : BOOLEAN .  (9)
+
+	.  reduce 9
+
+
+state 6
+	DeclFun : FUNC . Tipo IDENT '(' FormalPar ')' Bloco  (12)
+	DeclFun : FUNC . VOID IDENT '(' FormalPar ')' Bloco  (13)
+
+	INT  shift 3
+	DOUBLE  shift 4
+	BOOLEAN  shift 5
+	VOID  shift 10
+	.  error
+
+	Tipo  goto 11
+
+
+state 7
+	ListaDecl : ListaDecl DeclVar .  (2)
+
+	.  reduce 2
+
+
+state 8
+	ListaDecl : ListaDecl DeclFun .  (3)
+
+	.  reduce 3
+
+
+state 9
+	DeclVar : Tipo . ListaIdent ';'  (5)
+
+	IDENT  shift 12
+	.  error
+
+	ListaIdent  goto 13
+
+
+state 10
+	DeclFun : FUNC VOID . IDENT '(' FormalPar ')' Bloco  (13)
+
+	IDENT  shift 14
+	.  error
+
+
+state 11
+	DeclFun : FUNC Tipo . IDENT '(' FormalPar ')' Bloco  (12)
+
+	IDENT  shift 15
+	.  error
+
+
+state 12
+	ListaIdent : IDENT .  (10)
+
+	.  reduce 10
+
+
+state 13
+	DeclVar : Tipo ListaIdent . ';'  (5)
+	ListaIdent : ListaIdent . ',' IDENT  (11)
+
+	';'  shift 16
+	','  shift 17
+	.  error
+
+
+state 14
+	DeclFun : FUNC VOID IDENT . '(' FormalPar ')' Bloco  (13)
+
+	'('  shift 18
+	.  error
+
+
+state 15
+	DeclFun : FUNC Tipo IDENT . '(' FormalPar ')' Bloco  (12)
+
+	'('  shift 19
+	.  error
+
+
+state 16
+	DeclVar : Tipo ListaIdent ';' .  (5)
+
+	.  reduce 5
+
+
+state 17
+	ListaIdent : ListaIdent ',' . IDENT  (11)
+
+	IDENT  shift 20
+	.  error
+
+
+state 18
+	DeclFun : FUNC VOID IDENT '(' . FormalPar ')' Bloco  (13)
+	FormalPar : .  (20)
+
+	INT  shift 3
+	DOUBLE  shift 4
+	BOOLEAN  shift 5
+	')'  reduce 20
+
+	Tipo  goto 21
+	FormalPar  goto 22
+	ParamList  goto 23
+
+
+state 19
+	DeclFun : FUNC Tipo IDENT '(' . FormalPar ')' Bloco  (12)
+	FormalPar : .  (20)
+
+	INT  shift 3
+	DOUBLE  shift 4
+	BOOLEAN  shift 5
+	')'  reduce 20
+
+	Tipo  goto 21
+	FormalPar  goto 24
+	ParamList  goto 23
+
+
+state 20
+	ListaIdent : ListaIdent ',' IDENT .  (11)
+
+	.  reduce 11
+
+
+state 21
+	ParamList : Tipo . IDENT  (22)
+
+	IDENT  shift 25
+	.  error
+
+
+state 22
+	DeclFun : FUNC VOID IDENT '(' FormalPar . ')' Bloco  (13)
+
+	')'  shift 26
+	.  error
+
+
+state 23
+	FormalPar : ParamList .  (19)
+	ParamList : ParamList . ',' Tipo IDENT  (21)
+
+	','  shift 27
+	')'  reduce 19
+
+
+state 24
+	DeclFun : FUNC Tipo IDENT '(' FormalPar . ')' Bloco  (12)
+
+	')'  shift 28
+	.  error
+
+
+state 25
+	ParamList : Tipo IDENT .  (22)
+
+	.  reduce 22
+
+
+state 26
+	DeclFun : FUNC VOID IDENT '(' FormalPar ')' . Bloco  (13)
+
+	'{'  shift 29
+	.  error
+
+	Bloco  goto 30
+
+
+state 27
+	ParamList : ParamList ',' . Tipo IDENT  (21)
+
+	INT  shift 3
+	DOUBLE  shift 4
+	BOOLEAN  shift 5
+	.  error
+
+	Tipo  goto 31
+
+
+state 28
+	DeclFun : FUNC Tipo IDENT '(' FormalPar ')' . Bloco  (12)
+
+	'{'  shift 29
+	.  error
+
+	Bloco  goto 32
+
+
+state 29
+	Bloco : '{' . ListaCmd '}'  (23)
+	ListaCmd : .  (25)
+
+	.  reduce 25
+
+	ListaCmd  goto 33
+
+
+state 30
+	DeclFun : FUNC VOID IDENT '(' FormalPar ')' Bloco .  (13)
+
+	.  reduce 13
+
+
+state 31
+	ParamList : ParamList ',' Tipo . IDENT  (21)
+
+	IDENT  shift 34
+	.  error
+
+
+state 32
+	DeclFun : FUNC Tipo IDENT '(' FormalPar ')' Bloco .  (12)
+
+	.  reduce 12
+
+
+state 33
+	Bloco : '{' ListaCmd . '}'  (23)
+	ListaCmd : ListaCmd . Cmd  (24)
+
+	IDENT  shift 35
+	WHILE  shift 36
+	IF  shift 37
+	'{'  shift 29
+	'}'  shift 38
+	.  error
+
+	Bloco  goto 39
+	Cmd  goto 40
+
+
+state 34
+	ParamList : ParamList ',' Tipo IDENT .  (21)
+
+	.  reduce 21
+
+
+state 35
+	Cmd : IDENT . '=' E ';'  (29)
+
+	'='  shift 41
+	.  error
+
+
+state 36
+	Cmd : WHILE . '(' E ')' Cmd  (27)
+
+	'('  shift 42
+	.  error
+
+
+state 37
+	Cmd : IF . '(' E ')' Cmd RestoIf  (28)
+
+	'('  shift 43
+	.  error
+
+
+state 38
+	Bloco : '{' ListaCmd '}' .  (23)
+
+	.  reduce 23
+
+
+state 39
+	Cmd : Bloco .  (26)
+
+	.  reduce 26
+
+
+state 40
+	ListaCmd : ListaCmd Cmd .  (24)
+
+	.  reduce 24
+
+
+state 41
+	Cmd : IDENT '=' . E ';'  (29)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 49
+	F  goto 50
+
+
+state 42
+	Cmd : WHILE '(' . E ')' Cmd  (27)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 51
+	F  goto 50
+
+
+state 43
+	Cmd : IF '(' . E ')' Cmd RestoIf  (28)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 52
+	F  goto 50
+
+
+state 44
+	ChamadaFunc : IDENT . '(' ParamChamada ')'  (15)
+	F : IDENT .  (47)
+
+	'('  shift 53
+	GE  reduce 47
+	LE  reduce 47
+	EQ  reduce 47
+	NE  reduce 47
+	AND  reduce 47
+	OR  reduce 47
+	'>'  reduce 47
+	'<'  reduce 47
+	'+'  reduce 47
+	'-'  reduce 47
+	'*'  reduce 47
+	'/'  reduce 47
+	';'  reduce 47
+	','  reduce 47
+	')'  reduce 47
+
+
+state 45
+	F : NUM .  (48)
+
+	.  reduce 48
+
+
+state 46
+	E : '(' . E ')'  (44)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 54
+	F  goto 50
+
+
+state 47
+	E : '!' . E  (45)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 55
+	F  goto 50
+
+
+state 48
+	F : ChamadaFunc .  (49)
+
+	.  reduce 49
+
+
+state 49
+	Cmd : IDENT '=' E . ';'  (29)
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	AND  shift 60
+	OR  shift 61
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	';'  shift 68
+	.  error
+
+
+state 50
+	E : F .  (46)
+
+	.  reduce 46
+
+
+state 51
+	Cmd : WHILE '(' E . ')' Cmd  (27)
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	AND  shift 60
+	OR  shift 61
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	')'  shift 69
+	.  error
+
+
+state 52
+	Cmd : IF '(' E . ')' Cmd RestoIf  (28)
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	AND  shift 60
+	OR  shift 61
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	')'  shift 70
+	.  error
+
+
+state 53
+	ChamadaFunc : IDENT '(' . ParamChamada ')'  (15)
+	ParamChamada : .  (18)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	','  reduce 18
+	')'  reduce 18
+
+	ChamadaFunc  goto 48
+	ParamChamada  goto 71
+	E  goto 72
+	F  goto 50
+
+
+state 54
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+	E : '(' E . ')'  (44)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	AND  shift 60
+	OR  shift 61
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	')'  shift 73
+	.  error
+
+
+55: shift/reduce conflict (shift 56, reduce 45) on GE
+55: shift/reduce conflict (shift 57, reduce 45) on LE
+55: shift/reduce conflict (shift 58, reduce 45) on EQ
+55: shift/reduce conflict (shift 59, reduce 45) on NE
+55: shift/reduce conflict (shift 60, reduce 45) on AND
+55: shift/reduce conflict (shift 61, reduce 45) on OR
+55: shift/reduce conflict (shift 62, reduce 45) on '>'
+55: shift/reduce conflict (shift 63, reduce 45) on '<'
+55: shift/reduce conflict (shift 64, reduce 45) on '+'
+55: shift/reduce conflict (shift 65, reduce 45) on '-'
+55: shift/reduce conflict (shift 66, reduce 45) on '*'
+55: shift/reduce conflict (shift 67, reduce 45) on '/'
+state 55
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+	E : '!' E .  (45)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	AND  shift 60
+	OR  shift 61
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	';'  reduce 45
+	','  reduce 45
+	')'  reduce 45
+
+
+state 56
+	E : E GE . E  (38)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 74
+	F  goto 50
+
+
+state 57
+	E : E LE . E  (39)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 75
+	F  goto 50
+
+
+state 58
+	E : E EQ . E  (34)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 76
+	F  goto 50
+
+
+state 59
+	E : E NE . E  (35)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 77
+	F  goto 50
+
+
+state 60
+	E : E AND . E  (33)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 78
+	F  goto 50
+
+
+state 61
+	E : E OR . E  (32)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 79
+	F  goto 50
+
+
+state 62
+	E : E '>' . E  (36)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 80
+	F  goto 50
+
+
+state 63
+	E : E '<' . E  (37)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 81
+	F  goto 50
+
+
+state 64
+	E : E '+' . E  (40)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 82
+	F  goto 50
+
+
+state 65
+	E : E '-' . E  (41)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 83
+	F  goto 50
+
+
+state 66
+	E : E '*' . E  (42)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 84
+	F  goto 50
+
+
+state 67
+	E : E '/' . E  (43)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 85
+	F  goto 50
+
+
+state 68
+	Cmd : IDENT '=' E ';' .  (29)
+
+	.  reduce 29
+
+
+state 69
+	Cmd : WHILE '(' E ')' . Cmd  (27)
+
+	IDENT  shift 35
+	WHILE  shift 36
+	IF  shift 37
+	'{'  shift 29
+	.  error
+
+	Bloco  goto 39
+	Cmd  goto 86
+
+
+state 70
+	Cmd : IF '(' E ')' . Cmd RestoIf  (28)
+
+	IDENT  shift 35
+	WHILE  shift 36
+	IF  shift 37
+	'{'  shift 29
+	.  error
+
+	Bloco  goto 39
+	Cmd  goto 87
+
+
+state 71
+	ChamadaFunc : IDENT '(' ParamChamada . ')'  (15)
+	ParamChamada : ParamChamada . ',' E  (17)
+
+	','  shift 88
+	')'  shift 89
+	.  error
+
+
+state 72
+	ParamChamada : E .  (16)
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	AND  shift 60
+	OR  shift 61
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	','  reduce 16
+	')'  reduce 16
+
+
+state 73
+	E : '(' E ')' .  (44)
+
+	.  reduce 44
+
+
+state 74
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E GE E .  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	GE  reduce 38
+	LE  reduce 38
+	EQ  reduce 38
+	NE  reduce 38
+	AND  reduce 38
+	OR  reduce 38
+	'>'  reduce 38
+	'<'  reduce 38
+	';'  reduce 38
+	','  reduce 38
+	')'  reduce 38
+
+
+state 75
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E LE E .  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	GE  reduce 39
+	LE  reduce 39
+	EQ  reduce 39
+	NE  reduce 39
+	AND  reduce 39
+	OR  reduce 39
+	'>'  reduce 39
+	'<'  reduce 39
+	';'  reduce 39
+	','  reduce 39
+	')'  reduce 39
+
+
+state 76
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E EQ E .  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	GE  reduce 34
+	LE  reduce 34
+	EQ  reduce 34
+	NE  reduce 34
+	AND  reduce 34
+	OR  reduce 34
+	'>'  reduce 34
+	'<'  reduce 34
+	';'  reduce 34
+	','  reduce 34
+	')'  reduce 34
+
+
+state 77
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E NE E .  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	GE  reduce 35
+	LE  reduce 35
+	EQ  reduce 35
+	NE  reduce 35
+	AND  reduce 35
+	OR  reduce 35
+	'>'  reduce 35
+	'<'  reduce 35
+	';'  reduce 35
+	','  reduce 35
+	')'  reduce 35
+
+
+state 78
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E AND E .  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	AND  reduce 33
+	OR  reduce 33
+	';'  reduce 33
+	','  reduce 33
+	')'  reduce 33
+
+
+state 79
+	E : E . OR E  (32)
+	E : E OR E .  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	AND  reduce 32
+	OR  reduce 32
+	';'  reduce 32
+	','  reduce 32
+	')'  reduce 32
+
+
+state 80
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E '>' E .  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	GE  reduce 36
+	LE  reduce 36
+	EQ  reduce 36
+	NE  reduce 36
+	AND  reduce 36
+	OR  reduce 36
+	'>'  reduce 36
+	'<'  reduce 36
+	';'  reduce 36
+	','  reduce 36
+	')'  reduce 36
+
+
+state 81
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E '<' E .  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	GE  reduce 37
+	LE  reduce 37
+	EQ  reduce 37
+	NE  reduce 37
+	AND  reduce 37
+	OR  reduce 37
+	'>'  reduce 37
+	'<'  reduce 37
+	';'  reduce 37
+	','  reduce 37
+	')'  reduce 37
+
+
+state 82
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E '+' E .  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	'*'  shift 66
+	'/'  shift 67
+	GE  reduce 40
+	LE  reduce 40
+	EQ  reduce 40
+	NE  reduce 40
+	AND  reduce 40
+	OR  reduce 40
+	'>'  reduce 40
+	'<'  reduce 40
+	'+'  reduce 40
+	'-'  reduce 40
+	';'  reduce 40
+	','  reduce 40
+	')'  reduce 40
+
+
+state 83
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E '-' E .  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	'*'  shift 66
+	'/'  shift 67
+	GE  reduce 41
+	LE  reduce 41
+	EQ  reduce 41
+	NE  reduce 41
+	AND  reduce 41
+	OR  reduce 41
+	'>'  reduce 41
+	'<'  reduce 41
+	'+'  reduce 41
+	'-'  reduce 41
+	';'  reduce 41
+	','  reduce 41
+	')'  reduce 41
+
+
+state 84
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E '*' E .  (42)
+	E : E . '/' E  (43)
+
+	.  reduce 42
+
+
+state 85
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+	E : E '/' E .  (43)
+
+	.  reduce 43
+
+
+state 86
+	Cmd : WHILE '(' E ')' Cmd .  (27)
+
+	.  reduce 27
+
+
+87: shift/reduce conflict (shift 90, reduce 31) on ELSE
+state 87
+	Cmd : IF '(' E ')' Cmd . RestoIf  (28)
+	RestoIf : .  (31)
+
+	ELSE  shift 90
+	IDENT  reduce 31
+	WHILE  reduce 31
+	IF  reduce 31
+	'{'  reduce 31
+	'}'  reduce 31
+
+	RestoIf  goto 91
+
+
+state 88
+	ParamChamada : ParamChamada ',' . E  (17)
+
+	IDENT  shift 44
+	NUM  shift 45
+	'('  shift 46
+	'!'  shift 47
+	.  error
+
+	ChamadaFunc  goto 48
+	E  goto 92
+	F  goto 50
+
+
+state 89
+	ChamadaFunc : IDENT '(' ParamChamada ')' .  (15)
+
+	.  reduce 15
+
+
+state 90
+	RestoIf : ELSE . Cmd  (30)
+
+	IDENT  shift 35
+	WHILE  shift 36
+	IF  shift 37
+	'{'  shift 29
+	.  error
+
+	Bloco  goto 39
+	Cmd  goto 93
+
+
+state 91
+	Cmd : IF '(' E ')' Cmd RestoIf .  (28)
+
+	.  reduce 28
+
+
+state 92
+	ParamChamada : ParamChamada ',' E .  (17)
+	E : E . OR E  (32)
+	E : E . AND E  (33)
+	E : E . EQ E  (34)
+	E : E . NE E  (35)
+	E : E . '>' E  (36)
+	E : E . '<' E  (37)
+	E : E . GE E  (38)
+	E : E . LE E  (39)
+	E : E . '+' E  (40)
+	E : E . '-' E  (41)
+	E : E . '*' E  (42)
+	E : E . '/' E  (43)
+
+	GE  shift 56
+	LE  shift 57
+	EQ  shift 58
+	NE  shift 59
+	AND  shift 60
+	OR  shift 61
+	'>'  shift 62
+	'<'  shift 63
+	'+'  shift 64
+	'-'  shift 65
+	'*'  shift 66
+	'/'  shift 67
+	','  reduce 17
+	')'  reduce 17
+
+
+state 93
+	RestoIf : ELSE Cmd .  (30)
+
+	.  reduce 30
+
+
+Rules never reduced:
+	DeclVar :  (6)
+	DeclFun :  (14)
+
+
+State 2 contains 8 shift/reduce conflicts, 2 reduce/reduce conflicts.
+State 55 contains 12 shift/reduce conflicts.
+State 87 contains 1 shift/reduce conflict.
+
+
+34 terminals, 17 nonterminals
+50 grammar rules, 94 states
