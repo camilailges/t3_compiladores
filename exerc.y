@@ -1,95 +1,130 @@
 %{
   import java.io.*;
 %}
+   
 
+%token IDENT, NUM, WHILE, IF, ELSE, INT, DOUBLE, BOOLEAN, FUNC, VOID, RETURN
 
-%token IDENT NUM WHILE IF ELSE INT DOUBLE BOOLEAN FUNC VOID RETURN GE LE EQ NE AND OR UMINUS
-
-%left AND OR
-%left GE LE EQ NE '>' '<'
 %left '+' '-'
 %left '*' '/'
-%nonassoc UMINUS
+%nonassoc '<' '>' '>=' '=>' '!=' '=='
+%left '&&' '||'
 
 %%
 
 Prog : ListaDecl
     ;
 
-ListaDecl : ListaDecl DeclVar
-          | ListaDecl DeclFun
-          | // empty
+ListaDecl :  DeclVar  ListaDecl
+          |  DeclFun  ListaDecl
+          |  // vazio
           ;
+
 
 DeclVar : Tipo ListaIdent ';'
-        | // empty
         ;
+
 
 Tipo : INT
-     | DOUBLE
-     | BOOLEAN
-     ;
+    | DOUBLE
+    | BOOLEAN
+    ;
 
-ListaIdent : IDENT
-           | ListaIdent ',' IDENT
+ListaIdent : IDENT RestoListaIdent
            ;
 
-DeclFun : FUNC Tipo IDENT '(' FormalPar ')' Bloco
-        | FUNC VOID IDENT '(' FormalPar ')' Bloco
-        | // empty
-        ;
-ChamadaFunc : IDENT '(' ParamChamada ')'
-            ;
 
-ParamChamada : E
-             | ParamChamada ',' E
-             | // empty
+RestoListaIdent : ',' ListaIdent
+                | // vazio
+                ;
+
+
+DeclFun : FUNC Tipo IDENT '(' FormalPar ')' '{' DeclVar ListaCmd Retorno '}'
+        | FUNC VOID IDENT '(' FormalPar ')' '{' DeclVar ListaCmd '}'
+        ;
+
+
+Retorno : RETURN F ';'
+        ;
+
+ChamadaFunc : IDENT '(' ParamChamada ')' ';'
+
+
+ParamChamada : L ',' ParamChamada
+             | L
+             | // vazio
              ;
 
+
 FormalPar : ParamList
-          | // empty
+          | // vazio
           ;
 
-ParamList : ParamList ',' Tipo IDENT
-          | Tipo IDENT
+
+ParamList : Tipo IDENT RestoParamList
           ;
 
-Bloco : '{' ListaCmd '}'
+
+RestoParamList : ',' ParamList
+               | // vazio
+               ;
+
+
+
+Bloco : '{' ListaCmd '}' ';'
       ;
 
-ListaCmd : ListaCmd Cmd
-         | // empty
+
+
+ListaCmd : Cmd ListaCmd
+         | // vazio
          ;
+
 
 Cmd : Bloco
     | WHILE '(' E ')' Cmd
-    | IF '(' E ')' Cmd RestoIf
     | IDENT '=' E ';'
+    | IF '(' E ')' Cmd RestoIf
     ;
 
-RestoIf : ELSE Cmd
-        | // empty
-        ;
 
-E : E OR E
-  | E AND E
-  | E EQ E
-  | E NE E
-  | E '>' E
-  | E '<' E
-  | E GE E
-  | E LE E
-  | E '+' E
-  | E '-' E
-  | E '*' E
-  | E '/' E
-  | '(' E ')'
-  | '!' E
+
+RestoIf : ELSE Cmd
+       | // vazio
+       ;
+
+
+E : E '+' T
+    | E '-' T
+    | T
+    ;
+
+T : T '*' L
+  | T '/' L
+  | L
+  ;
+
+L : L '>' R
+  | L '<' R
+  | L '<=' R
+  | L '>=' R
+  | L '!=' R
+  | L '==' R
+  | R
+  ;
+
+R : R '||' F
+  | R '&&' F
   | F
   ;
 
 F : IDENT
   | NUM
+  | '(' E ')'
   | ChamadaFunc
   ;
 
+//T : T * F
+//  | T / F
+//  | F
+//  ;
